@@ -47,7 +47,7 @@ class CentroidTracker():
             for i in range(0, len(inputCentroids)):
                 self.register(inputCentroids[i])
         else:
-            
+
             objectIDs = list(self.objects.keys())
             objectCentroids = list(self.objects.values())
 
@@ -69,6 +69,22 @@ class CentroidTracker():
 
                 usedRows.add(row)
                 usedCols.add(col)
+
+                unusedRows = set(range(0, D.shape[0])).difference(usedRows)
+                unusedCols = set(range(0, D.shape[1])).difference(usedCols)
+
+                if D.shape[0] >= D.shape[1]:
+                    for row in unusedRows:
+                        objectID = objectIDs[row]
+                        self.disappeared[objectID] += 1
+                        if self.disappeared[objectID] > self.maxDisappeared:
+                            self.deregister[objectID]
+                else:
+                    for col in unusedCols:
+                        self.register(inputCentroids(col))
+            return self.objects
+            
+
 
 
                 
