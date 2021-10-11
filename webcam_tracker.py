@@ -19,17 +19,15 @@ while(True):
     rects = []
 
     for (x,y,w,h) in object_rect:
-        box = np.array([x,y,w,h], dtype = "int")
+        box = np.array([x,y,x+w,y+h], dtype = "int")
         rects.append(box)
         objects = centroid_tracker.update(rects)
 
         for (objectID, centroid) in objects.items():
             text = "Object {}".format(objectID)
-            cv2.putText(frame_detect, text, (centroid[0] - 10, centroid[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
-            cv2.rectangle(frame_detect, (x, y), (x+w, y+h), (255, 0, 0), 5)
-            cv2.circle(frame, (centroid[0], centroid[1]), 4, (255, 0, 0), 1)
-
-
+            cv2.putText(frame_detect, text, (centroid[0] + 10, centroid[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+            cv2.rectangle(frame_detect, (x, y), (x+w, y+h), (0, 0, 255), 5)
+            cv2.circle(frame_detect, (centroid[0], centroid[1]), 4, (255, 0, 0), -1)
     
     cv2.imshow('face', frame_detect)
 
