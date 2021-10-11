@@ -3,30 +3,35 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 
-ct = centroidtracker.CentroidTracker()
+centroid_tracker = centroidtracker.CentroidTracker()
 (H, W) = (None, None)
 
-ct.__init__()
-
 object_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-
-def adjusted_face_detect(img):
-    object_img = img.copy()
-    object_rect = object_cascade.detectMultiScale(face_img, scaleFactor = 1.2, minNeighbors = 5)
-
-    for (x,y,w,h) in object_rect:
-        cv2.rectangle(object_img, (x, y), (x+w, y+h), (255, 0, 0), 5)
-
-    return object_img
 
 vid = cv2.VideoCapture(0)
 
 while(True):
     ret, frame = vid.read()
 
-    frame_detect = adjusted_face_detect(frame)
+    frame_detect = frame.copy()
+    object_rect = object_cascade.detectMultiScale(frame_detect, scaleFactor = 1.3, minNeighbors = 7, minSize = (30,30))
+
+    rects = []
+
+    for (x,y,w,h) in object_rect:
+        box = np.array([x,y,w,h])
+        rects.append(box.astype("int"))
+        objects = centroid_tracker.update(rects)
+
+        for (objectID, centroid) in objects.items():
+            text = "ID {}".format(objectID)
+            cv2.putText(frame_detect, text, (centroid[0] - 10, centroid[1] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+            cv2.rectangle(frame_detect, (x, y), (x+w, y+h), (255, 0, 0), 5)
+            cv2.circle(frame, (centroid[0], centroid[1]), 4, (0, 255, 0), -1)
+
+
     
-    cv2.imshow('frame', frame_detect)
+    cv2.imshow('face', frame_detect)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

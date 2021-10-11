@@ -29,12 +29,12 @@ class CentroidTracker():
             for objectID in list(self.disappeared.keys()):
                 self.disappeared[objectID] += 1
                 
-                if self.disappeared[objectID] >= self.maxDisappeared:
+                if self.disappeared[objectID] > self.maxDisappeared:
                     self.deregister(objectID)
             return self.objects
 
         # initialize a list of input centroids
-        inputCentroids = np.zeros(len(rects, 2), dtype = "int")
+        inputCentroids = np.zeros((len(rects), 2), dtype = "int")
 
         for(i, (startX, startY, endX, endY)) in enumerate(rects):
             # initalize the center of the centroid
@@ -43,11 +43,10 @@ class CentroidTracker():
             inputCentroids[i] = (cX, cY)
 
         # register all new objects in input centroids
-        if len(self.objects == 0):
+        if len(self.objects) == 0:
             for i in range(0, len(inputCentroids)):
                 self.register(inputCentroids[i])
         else:
-
             objectIDs = list(self.objects.keys())
             objectCentroids = list(self.objects.values())
 
@@ -70,28 +69,16 @@ class CentroidTracker():
                 usedRows.add(row)
                 usedCols.add(col)
 
-                unusedRows = set(range(0, D.shape[0])).difference(usedRows)
-                unusedCols = set(range(0, D.shape[1])).difference(usedCols)
+            unusedRows = set(range(0, D.shape[0])).difference(usedRows)
+            unusedCols = set(range(0, D.shape[1])).difference(usedCols)
 
-                if D.shape[0] >= D.shape[1]:
-                    for row in unusedRows:
-                        objectID = objectIDs[row]
-                        self.disappeared[objectID] += 1
-                        if self.disappeared[objectID] > self.maxDisappeared:
-                            self.deregister[objectID]
-                else:
-                    for col in unusedCols:
-                        self.register(inputCentroids(col))
-            return self.objects
-            
-
-
-
-                
-
-        
-
-
-
-
-
+            if D.shape[0] >= D.shape[1]:
+                for row in unusedRows:
+                    objectID = objectIDs[row]
+                    self.disappeared[objectID] += 1
+                    if self.disappeared[objectID] > self.maxDisappeared:
+                        self.deregister(objectID)
+            else:
+                for col in unusedCols:
+                    self.register(inputCentroids[col])
+        return self.objects
