@@ -14,7 +14,7 @@ while(True):
     ret, frame = vid.read()
 
     frame_detect = frame.copy()
-    object_rect = object_cascade.detectMultiScale(frame_detect, scaleFactor = 1.3, minNeighbors = 7, minSize = (30,30))
+    object_rect = object_cascade.detectMultiScale(frame_detect, scaleFactor = 1.3, minNeighbors = 5, minSize = (30,30))
 
     rects = []
 
