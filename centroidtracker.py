@@ -47,9 +47,11 @@ class CentroidTracker():
             for i in range(0, len(inputCentroids)):
                 self.register(inputCentroids[i])
         else:
+            # establish lists of IDs and centroids
             objectIDs = list(self.objects.keys())
             objectCentroids = list(self.objects.values())
 
+            # calc distance array
             D = dist.cdist(np.array(objectCentroids), inputCentroids)
 
             rows = D.min(axis = 1).argsort()
