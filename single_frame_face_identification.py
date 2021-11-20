@@ -11,6 +11,6 @@ object_tracker.__init__()
 
 ret, frame = vid.read()
 
-bearing = object_tracker.get_bearing(ret, frame)
+num = object_tracker.get_num_detect(ret, frame)
 
-print(bearing)
+print(num)
