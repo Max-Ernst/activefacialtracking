@@ -1,6 +1,7 @@
 import centroidtracker
 import numpy as np
 import cv2
+import math
 
 class objectTracker():
 
@@ -41,10 +42,17 @@ class objectTracker():
             objects = self.centroid_tracker.update(rects)
 
             for (objectID, centroid) in objects.items():
+                #cv2.rectangle(frame_detect, (x, y), (x+w, y+h), (0, 0, 255), 5)
                 x_from_center = centroid[0] - 320
                 y_from_center = centroid[1] - 240
+                dist = ((x_from_center**2)+(y_from_center**2))**(1/2)
+                x_normalized = x_from_center/dist
+                y_normalized = y_from_center/dist
+                #cv2.circle(frame_detect, (centroid[0], centroid[1]), 4, (255, 0, 0), -1)
+                #cv2.arrowedLine(frame_detect, (320,240), (320+x_from_center, 240+y_from_center), (0, 0, 255), 1)
+                #cv2.imshow('face', frame_detect)
 
-                return (x_from_center, y_from_center)
+                return (x_normalized, y_normalized)
                 
 
     
